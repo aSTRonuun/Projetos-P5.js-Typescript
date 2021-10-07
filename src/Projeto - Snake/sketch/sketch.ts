@@ -3,13 +3,30 @@ const NC:number = 10;
 
 
 const LADO:number = 50;
-let snake_x:number = 4;
-let snake_y:number = 1;
+let snake_x:number = 0;
+let snake_y:number = 0;
 let snake_vx:number = 0;
 let snake_vy:number = 0;
 let snake_color: p5.Color;
 let cell_color: p5.Color;
 let timer:number = 0;
+
+let food_x:number = 0;
+let food_y:number = 0;
+let food_color: p5.Color;
+let eat_food_count = 0;
+
+function count_food() {
+  if(snake_x == food_x && snake_y == food_y){
+    eat_food_count++;
+    food_generate();
+  }
+}
+
+function food_generate() {
+  food_x = Math.floor(random(0, NC));
+  food_y = Math.floor(random(0, NL));
+}
 
 function draw_cel(x:number, y:number, color: p5.Color){
   noStroke();
@@ -67,15 +84,20 @@ function setup() {
   frameRate(30);
   snake_color = color("pink");
   cell_color = color("gray");
+  food_color = color("magenta");
+  food_generate();
 }
 
 function draw() {
   snake_walk();
   snake_limit_loop();
   draw_mat(cell_color);
+  draw_cel(food_x, food_y, food_color);
   draw_cel(snake_x, snake_y, snake_color);
+  count_food();
 
-  fill(0);
+  fill("black");
   textSize(25);
-  text(frameCount, 10, 30);
+  text(eat_food_count, 10, 30)
+
 }
