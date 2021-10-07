@@ -1,6 +1,8 @@
 const NL:number = 10;
 const NC:number = 10;
 
+let snake:Snake;
+
 
 const LADO:number = 50;
 let snake_x:number = 0;
@@ -17,7 +19,7 @@ let food_color: p5.Color;
 let eat_food_count = 0;
 
 function count_food() {
-  if(snake_x == food_x && snake_y == food_y){
+  if(snake.snake_x == food_x && snake.snake_y == food_y){
     eat_food_count++;
     food_generate();
   }
@@ -44,56 +46,58 @@ function draw_mat(color: p5.Color) {
 }
 
 function snake_limit_loop() {
-  if(snake_x == NC)
-    snake_x = 0;
-  if(snake_y == NL)
-    snake_y = 0;
-  if(snake_x == -1)
-    snake_x = NC - 1;
-  if(snake_y == -1)
-    snake_y = NL - 1;
+  if(snake.snake_x == NC)
+    snake.snake_x = 0;
+  if(snake.snake_y == NL)
+    snake.snake_y = 0;
+  if(snake.snake_x == -1)
+    snake.snake_x = NC - 1;
+  if(snake.snake_y == -1)
+    snake.snake_y = NL - 1;
 }
 
-function keyPressed() {
+function key_pressed(){
   if(keyCode === LEFT_ARROW){
-    snake_vx = -1;
-    snake_vy = 0; 
+      snake.snake_vx = -1;
+      snake.snake_vy = 0; 
   }else if(keyCode === RIGHT_ARROW){
-    snake_vx = 1;
-    snake_vy = 0;
+      snake.snake_vx = 1;
+      snake.snake_vy = 0;
   }else if(keyCode === UP_ARROW){
-    snake_vx = 0;
-    snake_vy = -1;
+      snake.snake_vx = 0;
+      snake.snake_vy = -1;
   }else if(keyCode === DOWN_ARROW){
-    snake_vx = 0;
-    snake_vy = 1;
+      snake.snake_vx = 0;
+      snake.snake_vy = 1;
   }
 }
 
-function snake_walk(){
+function snake_wakl(){
   if(frameCount - timer > 10) {
-    timer = frameCount;
-    snake_x += snake_vx;
-    snake_y += snake_vy;
+      timer = frameCount;
+      snake.snake_x += snake.snake_vx;
+      snake.snake_y += snake.snake_vy;
   }
 }
 
 function setup() {
 
   createCanvas(NC * LADO, NL * LADO);
+  snake = new Snake(color("green"));
+
   frameRate(30);
-  snake_color = color("pink");
   cell_color = color("gray");
   food_color = color("magenta");
   food_generate();
 }
 
 function draw() {
-  snake_walk();
+  snake_wakl();
+  key_pressed();
   snake_limit_loop();
   draw_mat(cell_color);
   draw_cel(food_x, food_y, food_color);
-  draw_cel(snake_x, snake_y, snake_color);
+  draw_cel(snake.snake_x, snake.snake_y, snake.snake_color);
   count_food();
 
   fill("black");

@@ -1,4 +1,5 @@
 class Snake {
+
     public snake_x:number;
     public snake_y:number;
     public snake_vx:number;
@@ -13,8 +14,6 @@ class Snake {
         this.snake_color = snake_color;
     }
 
-    public snake_limit_loop() {
-
-    }
+    
 
 }
