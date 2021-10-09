@@ -13,12 +13,12 @@ function loadImg(path: string): p5.Image {
     () => console.log("Loading " + path + " error")
   );
 }
-
+ 
 function preload() {
   bird_img = loadImg("../sketch/assets/bird.png");
   pipe_img_bottom = loadImg("../sketch/assets/pipe_bottom.png");
   pipe_img_top = loadImg("../sketch/assets/pipe_top.png");
-  background_img = loadImg("../sketch/assets/background.png")
+  background_img = loadImg("../sketch/assets/background.png");
 }
  
 function setup() {
@@ -29,7 +29,7 @@ function setup() {
 
 function draw() {
   print_background();
-  bird.draw();   
+  bird.draw();     
   bird.update();
 
   addPipe();

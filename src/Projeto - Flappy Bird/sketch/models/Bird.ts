@@ -13,7 +13,7 @@ class Bird {
         this.gravity = 0.3; 
         this.lift = -10;
         this.velocity = 0;
-    }
+    }   
 
     get x():number {
         return this._x;
