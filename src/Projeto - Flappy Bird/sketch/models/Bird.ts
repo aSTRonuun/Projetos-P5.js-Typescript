@@ -1,35 +1,46 @@
 class Bird {
-    x: number;
-    y: number;
-    gravity:number;
-    velocity:number;
-    lift:number;
+    private _x: number;
+    private _y: number;
+    private gravity:number;
+    private velocity:number;
+    private lift:number;
+    private img:p5.Image
 
-    constructor(x:number){
-        this.x = x;
-        this.y = height/2;
+    constructor(img: p5.Image){
+        this.img = img;
+        this._x = 65;
+        this._y = height/2;
         this.gravity = 0.3; 
         this.lift = -10;
         this.velocity = 0;
     }
 
-    draw():void {
-        fill(255);
-        ellipse(this.x, this.y, 32, 32);
+    get x():number {
+        return this._x;
     }
+
+
+    get y():number {
+        return this._y;
+    }
+
+    draw():void {  
+        fill(255);
+        image(this.img, this._x, this._y, 60, 60);
+    } 
 
     update():void{
         this.velocity += this.gravity;
-        this.y += this.velocity;    
+        this._y += this.velocity;    
         this.velocity *= 0.9;
         
-        if(this.y > height){
-            this.y = height;
+        if(this._y > height){
+            this._y = height;
             this.velocity = 0;
         }
 
-        if(this.y < 0){
-            this.y = 0;
+        if(this._y < 0){
+            this._y = 0;
             this.velocity = 0;
         }
     }
