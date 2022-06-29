@@ -5,6 +5,7 @@ let bird_img:p5.Image;
 let pipe_img_bottom:p5.Image;
 let pipe_img_top:p5.Image;
 let background_img:p5.Image;
+let hits:number;
 
 function loadImg(path: string): p5.Image {
   return loadImage(
@@ -20,17 +21,23 @@ function preload() {
   pipe_img_top = loadImg("../sketch/assets/pipe_top.png");
   background_img = loadImg("../sketch/assets/background.png");
 }
+
+preload();
  
 function setup() {
   createCanvas(windowWidth, windowHeight);
   bird = new Bird(bird_img);
   pipes.push(new Pipe(pipe_img_top, pipe_img_bottom));
-}
+};
+
+setup();
 
 function draw() {
   print_background();
   bird.draw();     
   bird.update();
+  
+
 
   addPipe();
   
@@ -48,6 +55,8 @@ function draw() {
   }
 }
 
+draw();
+
 function print_background():void{
   image(background_img, 0,0, windowWidth, windowHeight);
 }
@@ -63,3 +72,5 @@ function keyPressed():void{
     bird.up();
   }
 }
+
+keyPressed();
