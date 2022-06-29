@@ -13,16 +13,6 @@ const io = new socketio.Server(httpServer);
 
 app.use(express.static(path.resolve(__dirname, '../../')))
 
-function sepateTeam(team1, team2) {
-    users.sort();
-    for(let i = 0; i < 2; i++) {
-        team1.push(users[i].id);
-    }
-    for(let i = 2; i < 4; i++) {
-        team2.push(users[i].id);
-    }
-}
-
 function handleLose() {
     if(team1.length == 0) {
         console.log("team1 perdeu");
@@ -35,13 +25,17 @@ io.on("connection", (socket) => {
 
     users.push(socket);
 
-    if(users.length !== 4) {
-        console.log(`Esperando outros jogadores ${users.length}/2}`)
-    } else if (users.length === 4) {
-        console.log(`Esperando outros jogadores ${users.length}/2}`)
+    if(users.length !== 2) {
+        console.log(`Esperando outros jogadores ${users.length}/4}`)
+    } else if (users.length === 2) {
+        console.log(`Esperando outros jogadores ${users.length}/4}`)
         console.log("jogo iniciado")
-        sepateTeam(team1, team2);
+        // sepateTeam(team1, team2);
         io.emit("start");
+
+        for(let user of users) {
+            user.broadcast.emit("newPlayer", user.id);
+        }
         
     }
     socket.on("hit", (id) => {
@@ -55,14 +49,23 @@ io.on("connection", (socket) => {
         }
         handleLose();
     })
- 
-    socket.broadcast
 
-    for(let user of users) {
-        user.broadcast.emit("newPlayer")
-    }
+    socket.on("up", (id) => {
+        console.log(id);
+        socket.broadcast.emit("up", id)
+    })
 
-    
+    socket.on("randomPipeTop", () => {
+        let top = Math.floor(Math.random() * (200 - 50 + 1) + 50);
+        console.log(top);
+        io.emit("randomPipeTop", top);
+    })
+
+    socket.on("randomPipeBottom", () => {
+        let bottom = Math.floor(Math.random() * (200 - 50 + 1) + 50);
+        console.log(bottom);
+        io.emit("randomPipeBottom", bottom);
+    })
 })
 
 
