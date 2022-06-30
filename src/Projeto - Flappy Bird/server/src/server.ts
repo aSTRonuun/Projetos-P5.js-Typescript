@@ -4,8 +4,14 @@ import http from "http";
 import path from "path";
 
 const users = []
-const team1 = []
-const team2 = []
+const team1 = {
+    pontuation: 25,
+    players: []
+};
+const team2 = {
+    pontuation: 25,
+    players: []
+};
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -13,11 +19,15 @@ const io = new socketio.Server(httpServer);
 
 app.use(express.static(path.resolve(__dirname, '../../')))
 
-function handleLose() {
-    if(team1.length == 0) {
-        console.log("team1 perdeu");
-    }else {
-        console.log("time2 perdeu");
+function sepateTeam(users) {
+    for (let i = 0; i < users.length; i++) {
+        if (i % 2 === 0) {
+            team1.players.push(users[i].id);
+            io.emit("team", users[i].id, "team1");
+        } else {
+            team2.players.push(users[i].id);
+            io.emit("team", users[i].id, "team2");
+        }
     }
 }
 
@@ -25,12 +35,11 @@ io.on("connection", (socket) => {
 
     users.push(socket);
 
-    if(users.length !== 2) {
+    if(users.length !== 4) {
         console.log(`Esperando outros jogadores ${users.length}/4}`)
-    } else if (users.length === 2) {
+    } else if (users.length === 4) {
         console.log(`Esperando outros jogadores ${users.length}/4}`)
-        console.log("jogo iniciado")
-        // sepateTeam(team1, team2);
+        sepateTeam(users);
         io.emit("start");
 
         for(let user of users) {
@@ -39,15 +48,24 @@ io.on("connection", (socket) => {
         
     }
     socket.on("hit", (id) => {
-        let index = team1.indexOf(id);
-        if(index > -1) {
-            team1.splice(index, 1);
+        for(let player of team1.players) {
+            if(player === id) {
+                team1.pontuation--;
+                console.log(team1.pontuation);
+            }
         }
-        index = team2.indexOf(id);
-        if(index > -1) {
-            team2.splice(index, 1);
+        for(let player of team2.players) {
+            if(player === id) {
+                console.log(player);
+                team2.pontuation--;
+                console.log(team2.pontuation);
+            }
         }
-        handleLose();
+        if (team1.pontuation === 0) {
+            io.emit("end", "team2");
+        } else if (team2.pontuation === 0) {
+            io.emit("end", "team1");
+        }
     })
 
     socket.on("up", (id) => {
